@@ -51,7 +51,7 @@ def process_weather_data(
 
     # 3. Read Open-Meteo weather response
     weather_df = pl.read_json(target_json)
-
+    timestamp = datetime.datetime.now()
     # 4. Join metadata and unnest/explode nested weather lists into clean tabular rows
     processed_df = (
         cities_df.join(weather_df, on="location_id")
@@ -74,6 +74,7 @@ def process_weather_data(
             pl.col("temperature_2m_max"),
             pl.col("temperature_2m_min"),
             pl.col("precipitation_sum"),
+            pl.lit(timestamp).alias("inserted_at"),
         ])
     )
 
@@ -85,10 +86,10 @@ def process_weather_data(
         delta_write_options={"schema_mode": "merge"},
     )
 
+
     print(f"Successfully processed {len(processed_df)} records and saved to Delta table at '{delta_path_str}'.")
     return processed_df
 
 
 if __name__ == "__main__":
     process_weather_data()
-

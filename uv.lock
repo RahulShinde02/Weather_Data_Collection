@@ -238,7 +238,7 @@ wheels = [
 ]
 
 [[package]]
-name = "weather-data-collect"
+name = "weather-data-collection"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
